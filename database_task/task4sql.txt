@@ -1,0 +1,185 @@
+CREATE TABLE events(serial_number INT NOT NULL,
+			selector_id INT NOT NULL,
+			 event_name VARCHAR(20) NOT NULL);
+
+
+CREATE TABLE events_data(serial_number INT NOT NULL,
+			super_id INT NOT NULL,
+			event_timestamp DATETIME,
+			event_date varchar(10),
+			temp-avg double,
+			active_pwr-avg double,
+			wind_dir-avg double,
+			available_pwr-avg double);
+
+
+CREATE TABLE selector_data(serial_number INT NOT NULL,
+				super_id INT NOT NULL,
+				cust_id INT NOT NULL,
+				country VARCHAR(20),
+				model VARCHAR(10),
+				capacity INT NOT NULL
+					);
+
+
+
+
+
+
+LOAD DATA LOCAL INFILE "\PATH" INTO TABLE events
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES 
+(COL1,COL2,COL3)
+set added_on=STR_TO_DATE(@datevar, '%m/%d%Y');
+
+
+SELECT * FROM events;
+SELECT * FROM events_data;
+SELECT * FROM selector_data;
+SELECT * FROM events_data;
+
+
+
+SELECT serial_number FROM events_data WHERE serial_number='587860';
+SELECT * FROM events_data WHERE serial_number='587860';
+
+SELECT SUM(TABLE_ROWS) 
+     FROM INFORMATION_SCHEMA.TABLES 
+     WHERE TABLE_SCHEMA = '{your_db}';
+
+
+SELECT COUNT(*) FROM events;
+SELECT COUNT(*) FROM events_data;
+
+
+SELECT 
+    serial_number, 
+    COUNT(serial_number)
+FROM
+    events_data
+GROUP BY serial_number
+HAVING COUNT(serial_number) > 1;
+
+
+
+
+SELECT 
+    serial_number, COUNT(serial_number),
+    event_timestamp,  COUNT(event_timestamp)
+FROM
+    events_data
+GROUP BY 
+    serial_number , 
+    event_timestamp 
+HAVING  COUNT(serial_number) > 1
+    AND COUNT(event_timestamp) > 1;
+
+
+
+
+
+SELECT 
+    col1, COUNT(col1),
+    col2, COUNT(col2),
+    ...
+
+FROM
+    table_name
+GROUP BY 
+    col1, 
+    col2, ...
+HAVING 
+       (COUNT(col1) > 1) AND 
+       (COUNT(col2) > 1) AND 
+       ...
+
+
+SELECT MIN(event_date), MAX(event_date) FROM events_data;
+
+SELECT * FROM events_data ORDER BY serial_number ASC, event_timestamp DESC;
+
+
+
+
+DESC events_data;
+
+
+
+
+UPDATE
+    TableName
+SET
+    column01 = CASE column01 WHEN '' THEN NULL ELSE column01 END,
+    column02 = CASE column02 WHEN '' THEN NULL ELSE column02 END,
+    column03 = CASE column03 WHEN '' THEN NULL ELSE column03 END,
+    ...,
+    column99 = CASE column99 WHEN '' THEN NULL ELSE column99 END
+
+
+
+UPDATE [table]
+SET [column]=0
+WHERE [column] IS NULL;
+
+inner join
+SELECT table1.column1,table1.column2,table2.column1,....
+FROM table1 
+INNER JOIN table2
+ON table1.matching_column = table2.matching_column;
+
+SELECT events.serial_number,selector_data.serial_nimber
+FROM events 
+INNER JOIN selector_data
+ON events.serial_number = selector_data.serial_number;
+SELECT table1.column1,table1.column2,table2.column1,....
+FROM table1 
+LEFT JOIN table2
+ON table1.matching_column = table2.matching_column;
+
+
+SELECT avg(active_pwr-avg + wind_dir-avg + available_pwr-avg)
+FROM events_data
+WHERE serial_number=587854;
+
+
+
+
+ALTER TABLE events_data
+ALTER COLUMN event_timestamp nvarchar(200) [NULL|NOT NULL];
+
+
+SELECT columns
+FROM table1
+LEFT [OUTER] JOIN table2
+ON table1.column = table2.column;
+
+
+
+SELECT columns
+FROM table1
+RIGHT [OUTER] JOIN table2
+ON table1.column = table2.column;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

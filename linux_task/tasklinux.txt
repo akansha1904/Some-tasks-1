@@ -1,0 +1,68 @@
+#!/bin/bash
+function internsctl(){
+
+if [ "$1" = "--help" ]; then
+echo "
+		Help Index
+		
+		
+1.	To get Version of the command :
+	
+	# internsctl –version
+	
+2.	To get CPU information of my server :
+	# internsctl cpu getinfo 
+3.	To get Memory info information of my server :
+	# internsctl memory getinfo 
+4.	To create a new user on my server :
+	# internsctl user create <user name>
+	
+5.	To display user list on my server :
+	# internsctl user list
+	
+6.	To display user list on my server having sudo permissions :
+	# internsctl user list --sudo-only
+	
+7.	To get information about a file :
+	# internsctl file get info < file name >
+	
+8.	To get some specific information about a file  :
+	# internsctl file get info [ option ] < file name > 
+		--size, -s 		to print size
+		--permissions, -p 	to print file permissions
+		--owner, -o 		to print file owner
+	
+		--last-modified, -m     to print the last modification of the file
+"
+
+elif [ "$1" = "--version" ]; then
+echo " Command Version : v0.1.0"
+elif [[ "$1" = "cpu" ]] && [[ "$2" = "getinfo" ]]; then
+lscpu
+elif [[ "$1" = "memory" ]] && [[ "$2" = "getinfo" ]]; then
+sudo free
+elif [[ "$1" = "user" ]] && [[ "$2" = "create" ]]; then
+sudo adduser ${@:3:1}
+elif [[ "$1" = "user" ]] && [[ "$2" = "list" ]] && [[ "$3" = "--sudo-only" ]]; then
+cat /etc/group | grep sudo
+elif [[ "$1" = "user" ]] && [[ "$2" = "list" ]]; then
+cat /etc/passwd
+elif [[ "$1" = "file" ]] && [[ "$2" = "getinfo" ]] && [[ "$3" = "--size" ]] || [[ "$3" = "-s" ]]; then 
+x=$(stat -c %s ${@:4:1})
+echo "Size : $x"
+elif [[ "$1" = "file" ]] && [[ "$2" = "getinfo" ]] && [[ "$3" = "--permissions" ]] || [[ "$3" = "-p" ]]; then
+x=$(stat -c %A ${@:4:1})
+echo "Permissions : $x"
+elif [[ "$1" = "file" ]] && [[ "$2" = "getinfo" ]] && [[ "$3" = "--owner" ]] || [[ "$3" == "-o" ]]; then
+x=$(stat -c %U ${@:4:1})
+echo "Owner : $x"
+elif [[ "$1" = "file" ]] && [[ "$2" = "getinfo" ]] && [[ "$3" = "--last-modified" ]] || [[ "$3" == "-m" ]]; then
+x=$(stat -c %z ${@:4:1})
+echo "Last  modified : $x"
+elif [[ "$1" = "file" ]] && [[ "$2" = "getinfo" ]]; then
+stat ${@:3:1}
+
+else
+echo "incorrect command or command not found !"
+fi
+}
